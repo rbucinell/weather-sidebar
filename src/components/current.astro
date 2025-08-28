@@ -1,0 +1,48 @@
+---
+import GridIconStat from "./GridIconStat.astro";
+
+const { data } = Astro.props;
+const current = data.current;
+
+const aqi = ((index)=>{
+    const levels = [
+        {quality:'Good',      color: 'text-green-500' },
+        {quality:'Moderate',  color: 'text-yellow-300'},
+        {quality:'Sensitive', color: 'text-orange-500'},
+        {quality:'Unhealthy', color: 'text-red-500'},
+        {quality:'Severe',    color: 'text-purple-500'},
+        {quality:'Hazardous', color: 'text-orange-200'}
+    ]
+    return { ...levels[index-1], index}
+})(current.air_quality['us-epa-index']);
+
+const uv = (index=>{
+    if( index < 3 ) return 'text-green-500';
+    if( index < 6 ) return 'text-yellow-500';
+    if( index < 8 ) return 'text-orange-500';
+    if( index < 10) return 'text-red-500';
+    return 'text-purple-500';
+})(current.uv);
+
+
+
+---
+<div class="card card-side bg-base-100 shadow-sm">
+    <figure>
+        <img src={current.condition.icon.replaceAll('64','128')} alt={current.condition.text} />
+    </figure>
+    <div class="card-body">
+        <h2 class="card-title">
+            <span class="text-3xl">{current.temp_f}&deg;F</span>
+            <span class="text-2xl text-neutral-200">{current.condition.text}</span>
+        </h2>
+        <div class="grid grid-cols-3">
+            <!-- TODO: Add percip change from forecast api -->
+            <GridIconStat icon="wi:strong-wind" value={current.wind_mph} desc="mph" />
+            <GridIconStat icon="wi:sandstorm" value={current.windchill_f} desc="wind chill" />
+            <GridIconStat icon="wi:humidity"    value={current.humidity} desc="humidty" />
+            <GridIconStat icon="hugeicons:uv-02" class={uv} value={current.uv} desc="index" />
+            <GridIconStat icon="wi:fog" class={aqi.color} value={`AQI ${aqi.index}`} desc={aqi.quality} />
+        </div>
+    </div>
+</div>

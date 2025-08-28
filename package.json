@@ -1,0 +1,30 @@
+{
+  "name": "weather-sidebar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@astrojs/node": "^9.4.3",
+    "@tailwindcss/vite": "^4.1.12",
+    "astro": "^5.13.4",
+    "daisyui": "^5.0.54",
+    "tailwindcss": "^4.1.12"
+  },
+  "devDependencies": {
+    "@iconify-json/hugeicons": "^1.2.14",
+    "@iconify-json/meteocons": "^1.2.4",
+    "@iconify-json/wi": "^1.2.1",
+    "astro-icon": "^1.1.5"
+  }
+}

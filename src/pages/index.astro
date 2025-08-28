@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/defaultlayout.astro';
+import Current from '../components/current.astro';
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+const currentResponse = await fetch(`https://api.weatherapi.com/v1/current.json?aqi=yes&q=14450&key=${import.meta.env.weatherapiKey}`);
+const current = await currentResponse.json();
+---
+<Layout>
+    <h1 class="p-2 text-center text-5xl font-bold" id="datetime"></h1>
+    <Current data={current}/>
+
+    <script is:inline>
+
+        function formatDatetime( date ){
+            const d = Intl.DateTimeFormat('en',{ month: 'short', day: 'numeric',}).format(date);
+            const t = Intl.DateTimeFormat('en',{hour:'2-digit', minute:'2-digit'}).format(date);
+            return d + ' ' + t;
+        }
+
+        (()=>{
+            document.querySelector('#datetime').textContent = formatDatetime(new Date());
+            setInterval(()=>{
+                document.querySelector('#datetime').textContent = formatDatetime(new Date());
+            },  1000)
+        })();
+    </script>
+</Layout>
