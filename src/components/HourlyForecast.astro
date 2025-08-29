@@ -1,0 +1,45 @@
+---
+const { data:forecastday } = Astro.props;
+
+const hoursICareAbout = forecastday.hour.filter( hour => {
+    const timeHour = new Date(hour.time).getHours()
+    return timeHour > 5 && timeHour < 23;
+});
+
+---
+<style>    
+    .forecast-label::before {
+        position: absolute;
+        top: -30px;
+        left: 5px;
+        width: 50px;
+    }
+
+    #forecast-hourly-6::before {
+        content: '6 AM';
+    }
+
+    #forecast-hourly-12::before {
+        content: '12 PM';
+    }
+
+    #forecast-hourly-18::before{
+        content: '6 PM';
+    }
+</style>
+<div class="divider">Hourly Forecast</div>
+<div class="flex flex-row mt-8">
+    { hoursICareAbout.map( hour =>{
+        const time = new Date(hour.time);
+        return <div id={`forecast-hourly-${time.getHours()}`} class="forecast-label flex-grow border-x border-gray-500 relative">
+                <div class="flex flex-col gap-1 items-center">
+                    <figure>
+                        <img src={hour.condition.icon} alt={hour.condition.text} />
+                    </figure>
+                    <div>{Math.floor(hour.temp_f)}&deg;</div>
+                        {hour.chance_of_snow === 0 && <div class="">{hour.chance_of_rain === 0 ? '--' :`${hour.chance_of_rain}%`}</div>}
+                        {hour.chance_of_snow !== 0 && <div class="">{hour.chance_of_rain}%</div>}
+                </div>
+            </div>
+})}
+</div>

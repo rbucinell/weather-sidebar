@@ -1,48 +1,46 @@
 ---
+import { Icon } from 'astro-icon/components';
 import GridIconStat from "./GridIconStat.astro";
+import { aqiFormat, uvFormat } from '../scripts/util';
+const { data:current, forecast } = Astro.props;
 
-const { data } = Astro.props;
-const current = data.current;
-
-const aqi = ((index)=>{
-    const levels = [
-        {quality:'Good',      color: 'text-green-500' },
-        {quality:'Moderate',  color: 'text-yellow-300'},
-        {quality:'Sensitive', color: 'text-orange-500'},
-        {quality:'Unhealthy', color: 'text-red-500'},
-        {quality:'Severe',    color: 'text-purple-500'},
-        {quality:'Hazardous', color: 'text-orange-200'}
-    ]
-    return { ...levels[index-1], index}
-})(current.air_quality['us-epa-index']);
-
-const uv = (index=>{
-    if( index < 3 ) return 'text-green-500';
-    if( index < 6 ) return 'text-yellow-500';
-    if( index < 8 ) return 'text-orange-500';
-    if( index < 10) return 'text-red-500';
-    return 'text-purple-500';
-})(current.uv);
-
-
-
+const aqi = aqiFormat(current.air_quality['us-epa-index']);
+const uv = uvFormat(current.uv);
 ---
-<div class="card card-side bg-base-100 shadow-sm">
+<div class="card card-side bg-base-100">
     <figure>
         <img src={current.condition.icon.replaceAll('64','128')} alt={current.condition.text} />
     </figure>
-    <div class="card-body">
-        <h2 class="card-title">
-            <span class="text-3xl">{current.temp_f}&deg;F</span>
-            <span class="text-2xl text-neutral-200">{current.condition.text}</span>
+    <div class="card-body p-1 py-4">
+        <h2 class="flex flex-col">
+            <div class="flex flex-row justify-start gap-4">
+                <span class="text-3xl">{current.temp_f}&deg;F</span>
+                <span class="flex flex-col items-start">
+                    <span class="text-sm text-slate-400">MAX<span class="ml-2 text-white">{forecast.day.maxtemp_f}&deg;F</span></span>
+                    <span class="text-sm text-slate-400">MIN<span class="ml-2 text-white">{forecast.day.mintemp_f}&deg;F</span></span>
+                </span>
+                <span class="flex flex-col items-start mr-1 ml-auto text-white">
+                    <div class="flex flex-row gap-1">
+                        <Icon name="wi:sunrise" size={24} class="text-yellow-200"/>
+                        <span class="">{forecast.astro.sunrise}</span>
+                    </div>
+                    <div class="flex flex-row gap-1">
+                        <Icon name="wi:sunset" size={24} class="text-indigo-500"/>
+                        <span class="">{forecast.astro.sunset}</span>
+                    </div>
+                </span>
+            </div>
+            <div class="text-lg">{current.condition.text}</div>
         </h2>
         <div class="grid grid-cols-3">
             <!-- TODO: Add percip change from forecast api -->
+            { forecast.day.daily_chance_of_snow === 0 && <GridIconStat icon="wi:showers" value={`${forecast.day.daily_chance_of_rain}%`} desc="of Rain" />}
+            { forecast.day.daily_chance_of_snow !== 0 && <GridIconStat icon="wi:snow" value={`${forecast.day.daily_chance_of_snow}%`} desc="of Snow" />}
             <GridIconStat icon="wi:strong-wind" value={current.wind_mph} desc="mph" />
             <GridIconStat icon="wi:sandstorm" value={current.windchill_f} desc="wind chill" />
-            <GridIconStat icon="wi:humidity"    value={current.humidity} desc="humidty" />
             <GridIconStat icon="hugeicons:uv-02" class={uv} value={current.uv} desc="index" />
             <GridIconStat icon="wi:fog" class={aqi.color} value={`AQI ${aqi.index}`} desc={aqi.quality} />
+            <GridIconStat icon="wi:humidity"  value={current.humidity} desc="humidty" />    
         </div>
     </div>
 </div>

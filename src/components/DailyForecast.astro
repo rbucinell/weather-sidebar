@@ -1,0 +1,36 @@
+---
+import { aqiFormat, formatDatetime, uvFormat } from "../scripts/util";
+import GridIconStat from "./GridIconStat.astro";
+
+
+
+
+const { data } = Astro.props;
+const forecastdays = data.forecastday;
+---
+<div class="divider">3 Day Lookahead</div>
+<div class="flex flex-row">
+    { forecastdays && forecastdays.map( (forecastday) =>{
+        const day = forecastday.day;
+        const aqi = aqiFormat(day.air_quality['us-epa-index']);
+        const uv = uvFormat(day.uv);
+
+        return <div class="flex flex-col flex-grow items-center">
+            <h3>{Intl.DateTimeFormat('en',{ month: 'short', day: 'numeric',}).format(new Date(forecastday.date))}</h3>
+            <figure>
+                <img src={day.condition.icon.replaceAll('64','128')} alt={day.condition.text} />
+            </figure>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <span class="text-xs text-slate-400">MIN<span class="text-white text-lg">{day.mintemp_f}&deg;F</span></span>
+                <span class="text-xs text-slate-400">MAX<span class="text-white text-lg">{day.maxtemp_f}&deg;F</span></span>
+                
+            </div>
+
+            <div class="grid grid-cols-2">
+                <GridIconStat icon="hugeicons:uv-02" size={24} class={uv} value={day.uv} desc="index" />
+                <GridIconStat icon="wi:fog" size={24} class={aqi.color} value={`AQI ${aqi.index}`} desc={aqi.quality} />
+            </div>
+        </div>
+})}
+</div>

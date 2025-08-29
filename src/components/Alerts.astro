@@ -1,0 +1,34 @@
+---
+import { formDataToObject } from "astro:actions";
+import { formatDatetime } from "../scripts/util";
+const { data } = Astro.props;
+const alerts = data.alert;
+// const alerts = [
+//         {
+//         "headline":"Flood Warning issued January 05 at 9:47PM EST until January 07 at 6:15AM EST by NWS",
+//         "msgtype":"Alert",
+//         "severity":"Moderate",
+//         "urgency":"Expected",
+//         "areas":"Calhoun; Lexington; Richland",
+//         "category":"Met",
+//         "certainty":"Likely",
+//         "event":"Flood Warning",
+//         "note":"Alert for Calhoun; Lexington; Richland (South Carolina) Issued by the National Weather Service",
+//         "effective":"2021-01-05T21:47:00-05:00",
+//         "expires":"2021-01-07T06:15:00-05:00",
+//         "desc":"...The Flood Warning continues for the following rivers in South\nCarolina...\nCongaree River At Carolina Eastman affecting Richland, Calhoun\nand Lexington Counties.\nCongaree River At Congaree National Park-Gadsden affecting\nCalhoun and Richland Counties.\nNorth Fork Edisto River At Orangeburg affecting Orangeburg County.\n...The Flood Warning is now in effect until Thursday morning...\nThe Flood Warning continues for\nthe Congaree River At Carolina Eastman.\n* Until Thursday morning.\n* At 9:28 PM EST Tuesday the stage was 115.6 feet.\n* Flood stage is 115.0 feet.\n* Minor flooding is occurring and minor flooding is forecast.\n* Recent Activity...The maximum river stage in the 24 hours ending\nat 9:28 PM EST Tuesday was 118.2 feet.\n* Forecast...The river will rise to 115.7 feet just after midnight\ntonight. It will then fall below flood stage tomorrow morning to\n114.2 feet and begin rising again tomorrow evening. It will rise\nto 114.3 feet early Thursday morning. It will then fall again and\nremain below flood stage.\n* Impact...At 115.0 feet, Flooding occurs in low lying areas of the\nCarolina Eastman Facility and at the Congaree National Park.\n* Flood History...This crest compares to a previous crest of 116.3\nfeet on 12/03/2020.\n&&",
+//         "instruction":"A Flood Warning means that flooding is imminent or occurring. All\ninterested parties should take necessary precautions immediately.\nMotorists should not attempt to drive around barricades or drive\ncars through flooded areas.\nCaution is urged when walking near riverbanks.\nAdditional information is available at www.weather.gov.\nThe next statement will be issued Wednesday morning at 1000 AM EST."
+//         }
+//     ];
+---
+{ alerts && alerts.map( alert =>{
+    return <div role="alert" class="alert alert-warning alert-soft mb-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+            <h3 class="font-bold">{`${alert.event} issued ${formatDatetime(new Date(alert.effective))} until ${formatDatetime(new Date(alert.expires))}`}</h3>
+            <div class="text-xs">{alert.note}</div>
+        </div>
+    </div>
+})}
