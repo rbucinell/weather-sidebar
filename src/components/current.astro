@@ -7,20 +7,21 @@ const { data:current, forecast } = Astro.props;
 const aqi = aqiFormat(current.air_quality['us-epa-index']);
 const uv = uvFormat(current.uv);
 ---
-<div class="card card-side bg-base-100">
-    <figure>
-        <img src={current.condition.icon.replaceAll('64','128')} alt={current.condition.text} />
+<div class="card bg-base-100">
+    <figure class="flex flex-col">
+        <img height="256" width="256" src={current.condition.icon.replaceAll('64','128')}alt={current.condition.text} />
+        <div class="text-2xl">{current.condition.text}</div>
     </figure>
     <div class="card-body p-1 py-4">
         <h2 class="flex flex-col">
             <div class="flex flex-row justify-start gap-4">
-                <span class="text-3xl">{current.temp_f}&deg;F</span>
+                <span class="text-5xl">{current.temp_f}&deg;F</span>
                 <span class="flex flex-col items-start">
-                    <span class="text-sm text-slate-400">MAX<span class="ml-2 text-white">{forecast.day.maxtemp_f}&deg;F</span></span>
-                    <span class="text-sm text-slate-400">MIN<span class="ml-2 text-white">{forecast.day.mintemp_f}&deg;F</span></span>
+                    <span class="text-lg text-slate-400">MAX<span class="ml-2 text-white">{forecast.day.maxtemp_f}&deg;F</span></span>
+                    <span class="text-lg text-slate-400">MIN<span class="ml-2 text-white">{forecast.day.mintemp_f}&deg;F</span></span>
                 </span>
-                <span class="flex flex-col items-start mr-1 ml-auto text-white">
-                    <div class="flex flex-row gap-1">
+                <span class="flex flex-col items-start mr-1 ml-auto text-lg text-white">
+                    <div class="flex flex-row items-center gap-1">
                         <Icon name="wi:sunrise" size={24} class="text-yellow-200"/>
                         <span class="">{forecast.astro.sunrise}</span>
                     </div>
@@ -30,7 +31,7 @@ const uv = uvFormat(current.uv);
                     </div>
                 </span>
             </div>
-            <div class="text-lg">{current.condition.text}</div>
+            
         </h2>
         <div class="grid grid-cols-3">
             <!-- TODO: Add percip change from forecast api -->

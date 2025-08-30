@@ -16,6 +16,7 @@
   "type": "commonjs",
   "dependencies": {
     "@astrojs/node": "^9.4.3",
+    "@astrojs/vercel": "^8.2.7",
     "@tailwindcss/vite": "^4.1.12",
     "astro": "^5.13.4",
     "daisyui": "^5.0.54",
