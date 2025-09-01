@@ -7,7 +7,7 @@ import vercelServerless from '@astrojs/vercel/serverless';
 export default defineConfig({
     //output: 'static',
     output: "server",
-    adapter: vercelStatic(),
+    adapter: vercelServerless(),
     vite: {
       plugins: [ tailwindcss() ],
       server: {
