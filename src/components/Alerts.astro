@@ -28,7 +28,7 @@ const alerts = data.alert;
         </svg>
         <div>
             <h3 class="font-bold">{`${alert.event} issued ${formatDatetime(new Date(alert.effective))} until ${formatDatetime(new Date(alert.expires))}`}</h3>
-            <div class="text-xs">{alert.note}</div>
+            <div class="text-xs">{alert.instruction}</div>
         </div>
     </div>
 })}
