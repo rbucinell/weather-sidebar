@@ -14,6 +14,7 @@ end.setDate(end.getDate()+3);
 let formattedEnd = new Intl.DateTimeFormat('en-US').format(end);
 //dt=${formattedDate}&end_dt=${formattedEnd}&
 const weatherResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?days=3&aqi=yes&q=14450&alerts=yes&key=${import.meta.env.weatherapiKey}`);
+console.log( `https://api.weatherapi.com/v1/forecast.json?days=3&aqi=yes&q=14450&alerts=yes&key=${import.meta.env.weatherapiKey}` )
 const json = await weatherResponse.json();
 const current = json.current;
 const forecast = json.forecast;

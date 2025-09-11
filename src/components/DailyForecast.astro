@@ -2,9 +2,6 @@
 import { aqiFormat, formatDatetime, uvFormat } from "../scripts/util";
 import GridIconStat from "./GridIconStat.astro";
 
-
-
-
 const { data } = Astro.props;
 const forecastdays = data.forecastday;
 ---
@@ -12,8 +9,8 @@ const forecastdays = data.forecastday;
 <div class="flex flex-row">
     { forecastdays && forecastdays.map( (forecastday) =>{
         const day = forecastday.day;
-        const aqi = aqiFormat(day.air_quality['us-epa-index']);
-        const uv = uvFormat(day.uv);
+        // const aqi = aqiFormat(day?.air_quality['us-epa-index']);
+        const uv = uvFormat(day?.uv);
 
         return <div class="flex flex-col flex-grow items-center">
             <h3>{Intl.DateTimeFormat('en',{ month: 'short', day: 'numeric',}).format(new Date(forecastday.date))}</h3>
@@ -29,7 +26,8 @@ const forecastdays = data.forecastday;
 
             <div class="grid grid-cols-2">
                 <GridIconStat icon="hugeicons:uv-02" size={24} class={uv} value={day.uv} desc="index" />
-                <GridIconStat icon="wi:fog" size={24} class={aqi.color} value={`AQI ${aqi.index}`} desc={aqi.quality} />
+                { day.daily_chance_of_snow === 0 && <GridIconStat icon="wi:showers" class="text-blue-500" value={`${day.daily_chance_of_rain}%`} desc="of Rain" />}
+                { day.daily_chance_of_snow !== 0 && <GridIconStat icon="wi:snow"    class="text-white" value={`${day.daily_chance_of_snow}%`} desc="of Snow" />}
             </div>
         </div>
 })}
