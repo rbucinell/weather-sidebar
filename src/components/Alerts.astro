@@ -2,7 +2,7 @@
 import { formDataToObject } from "astro:actions";
 import { formatDatetime } from "../scripts/util";
 const { data } = Astro.props;
-const alerts = data.alert;
+let alerts = data.alert;
 // const alerts = [
 //         {
 //         "headline":"Flood Warning issued January 05 at 9:47PM EST until January 07 at 6:15AM EST by NWS",
@@ -20,6 +20,15 @@ const alerts = data.alert;
 //         "instruction":"A Flood Warning means that flooding is imminent or occurring. All\ninterested parties should take necessary precautions immediately.\nMotorists should not attempt to drive around barricades or drive\ncars through flooded areas.\nCaution is urged when walking near riverbanks.\nAdditional information is available at www.weather.gov.\nThe next statement will be issued Wednesday morning at 1000 AM EST."
 //         }
 //     ];
+
+var alertSet = new Set();
+alerts.forEach(alert => {
+    alertSet.add(JSON.stringify({
+        title: `${alert.event} issued ${formatDatetime(new Date(alert.effective))} until ${formatDatetime(new Date(alert.expires))}`,
+        instruction: alert.instruction
+    }))
+});
+alerts = Array.from( alertSet ).map( a => JSON.parse( a as string ));
 ---
 { alerts && alerts.map( alert =>{
     return <div role="alert" class="alert alert-warning alert-soft mb-1">
@@ -27,7 +36,7 @@ const alerts = data.alert;
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
         <div>
-            <h3 class="font-bold">{`${alert.event} issued ${formatDatetime(new Date(alert.effective))} until ${formatDatetime(new Date(alert.expires))}`}</h3>
+            <h3 class="font-bold">{alert.title}</h3>
             <div class="text-xs">{alert.instruction}</div>
         </div>
     </div>
